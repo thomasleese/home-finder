@@ -12,3 +12,7 @@ poetry install
 poetry run python manage.py migrate
 poetry run python manage.py runserver
 ```
+
+```sh
+poetry run pytest
+```
