@@ -10,8 +10,10 @@ python = "^3.10"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6"
+factory-boy = "^3.2"
 pytest = "^7.1"
 pytest-django = "^4.5"
+pytest-factoryboy = "^2.5"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "home_finder.settings"
