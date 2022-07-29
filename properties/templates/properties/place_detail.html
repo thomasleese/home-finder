@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block main %}
+  <h1>{{ object.name }}</h1>
+
+  <h2>Closest properties</h2>
+  <ul>
+    {% for property_place in object.property_places.all %}
+      <li>{{ property_place.property.address }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

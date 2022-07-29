@@ -1,0 +1,15 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Properties{% endblock %}
+
+{% block main %}
+  <h1>Properties</h1>
+
+  <ul>
+    {% for property in page_obj %}
+      <li><a href="{{ property.get_absolute_url }}">{{ property.address }}</a></li>
+    {% endfor %}
+  </ul>
+
+  {% include "../includes/pagination.html" %}
+{% endblock %}

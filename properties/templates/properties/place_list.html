@@ -1,0 +1,15 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Places{% endblock %}
+
+{% block main %}
+  <h1>Places</h1>
+
+  <ul>
+    {% for place in page_obj %}
+      <li><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+    {% endfor %}
+  </ul>
+
+  {% include "../includes/pagination.html" %}
+{% endblock %}

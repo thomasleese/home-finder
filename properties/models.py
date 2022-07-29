@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
@@ -43,6 +44,9 @@ class Property(models.Model):
     def __str__(self):
         return self.address
 
+    def get_absolute_url(self):
+        return reverse("properties:property-detail", kwargs={"pk": self.pk})
+
 
 class Place(models.Model):
     class Kind(models.TextChoices):
@@ -64,10 +68,17 @@ class Place(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("properties:place-detail", kwargs={"pk": self.pk})
+
 
 class PropertyPlace(models.Model):
-    property = models.ForeignKey(Property, on_delete=models.CASCADE)
-    place = models.ForeignKey(Place, on_delete=models.CASCADE)
+    property = models.ForeignKey(
+        Property, on_delete=models.CASCADE, related_name="property_places"
+    )
+    place = models.ForeignKey(
+        Place, on_delete=models.CASCADE, related_name="property_places"
+    )
 
     driving_distance = models.PositiveBigIntegerField(null=True, blank=True)
     driving_duration = models.PositiveBigIntegerField(null=True, blank=True)
