@@ -26,7 +26,7 @@
   <h2>Results</h2>
   <ul>
     {% for result in object.results.all %}
-      <li>{{ result }}</li>
+      <li><a href="{{ result.property.get_absolute_url }}">{{ result.property.address }}</a></li>
     {% endfor %}
   </ul>
 {% endblock %}

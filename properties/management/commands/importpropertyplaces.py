@@ -16,19 +16,7 @@ class Command(BaseCommand):
                 distance=Distance("location", property.location)
             ).order_by("distance")[:100]
 
-            closest_places = [
-                place
-                for place in closest_places
-                if not PropertyPlace.objects.filter(
-                    property=property, place=place
-                ).exists()
-            ]
+            for place in closest_places:
+                self.stdout.write(f" - {place.name} ({place.kind})")
 
-            for i in range(0, len(closest_places), 25):
-                self.import_property_places(property, closest_places[i : i + 25])
-
-    def import_property_places(self, property, places):
-        for place in places:
-            self.stdout.write(f" - {place.name} ({place.kind})")
-
-        create_property_places(property, places)
+            create_property_places([property], closest_places)

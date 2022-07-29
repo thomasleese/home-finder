@@ -7,6 +7,9 @@ register = template.Library()
 
 @register.filter
 def format_distance(value):
+    if not value:
+        return ""
+
     if value >= 500:
         return mark_safe(f"{round(value / 1000, 2)}&nbsp;km")
     else:
@@ -15,6 +18,9 @@ def format_distance(value):
 
 @register.filter
 def format_duration(value):
+    if not value:
+        return ""
+
     if value >= 60:
         mins = value // 60
         secs = value - (mins * 60)

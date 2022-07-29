@@ -15,6 +15,8 @@ class Search(models.Model):
     max_price_rent_per_week = models.PositiveIntegerField(null=True, blank=True)
     max_price_rent_per_month = models.PositiveIntegerField(null=True, blank=True)
 
+    min_number_of_bedrooms = models.PositiveSmallIntegerField(null=True, blank=True)
+
     class Meta:
         verbose_name_plural = "searches"
 
