@@ -22,6 +22,7 @@ class Property(models.Model):
     number_of_bedrooms = models.PositiveSmallIntegerField()
 
     class Meta:
+        verbose_name_plural = "properties"
         constraints = [
             models.CheckConstraint(
                 check=models.Q(
@@ -46,7 +47,7 @@ class Property(models.Model):
         except IndexError:
             self.location = None
         else:
-            self.location = Point(location["lat"], location["lng"])
+            self.location = Point(location["lng"], location["lat"])
 
 
 class Amenity(models.Model):
@@ -64,6 +65,9 @@ class Amenity(models.Model):
     name = models.TextField()
     location = models.PointField()
     kind = models.CharField(max_length=32, choices=Kind.choices)
+
+    class Meta:
+        verbose_name_plural = "amenities"
 
     def __str__(self):
         return self.name

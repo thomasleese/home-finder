@@ -31,7 +31,7 @@ class Command(BaseCommand):
         google_id = place["place_id"]
         name = place["name"]
         location = Point(
-            place["geometry"]["location"]["lat"], place["geometry"]["location"]["lng"]
+            place["geometry"]["location"]["lng"], place["geometry"]["location"]["lat"]
         )
 
         Amenity.objects.update_or_create(
