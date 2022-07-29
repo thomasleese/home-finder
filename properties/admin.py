@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Amenity, Property
+from .models import Place, Property
 
 
-@admin.register(Amenity)
-class AmenityAdmin(admin.ModelAdmin):
+@admin.register(Place)
+class PlaceAdmin(admin.ModelAdmin):
     list_display = ("name", "kind")
     list_filter = ("kind",)
     search_fields = ("name",)

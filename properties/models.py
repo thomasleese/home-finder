@@ -1,15 +1,14 @@
-from django.conf import settings
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import Point
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
-import googlemaps
 
 
 class Property(models.Model):
     zoopla_id = models.PositiveBigIntegerField()
 
     address = models.TextField()
+
+    google_place_id = models.CharField(max_length=256, blank=True, default="")
     location = models.PointField()
 
     url = models.URLField()
@@ -41,18 +40,8 @@ class Property(models.Model):
             ),
         ]
 
-    def fetch_location(self):
-        gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
-        geocode_results = gmaps.geocode(self.address)
-        try:
-            location = geocode_results[0]["geometry"]["location"]
-        except IndexError:
-            self.location = None
-        else:
-            self.location = Point(location["lng"], location["lat"])
 
-
-class Amenity(models.Model):
+class Place(models.Model):
     class Kind(models.TextChoices):
         BUS_STATION = "bus_station", _("Bus station")
         GYM = "gym", _("Gym")
@@ -67,9 +56,3 @@ class Amenity(models.Model):
     name = models.TextField()
     location = models.PointField()
     kind = models.CharField(max_length=32, choices=Kind.choices)
-
-    class Meta:
-        verbose_name_plural = "amenities"
-
-    def __str__(self):
-        return self.name

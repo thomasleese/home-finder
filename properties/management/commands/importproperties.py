@@ -1,6 +1,9 @@
 import itertools
 
+from django.conf import settings
+from django.contrib.gis.geos import Point
 from django.core.management.base import BaseCommand
+import googlemaps
 from zoopla import Zoopla
 
 from properties.models import Property
@@ -58,11 +61,17 @@ class Command(BaseCommand):
         property.photos = zoopla_property.photos
         property.number_of_bedrooms = zoopla_property.number_of_bedrooms
 
-        if not property.location:
-            property.fetch_location()
-
-            if not property.location:
+        if not property.location or not property.google_place_id:
+            gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
+            geocode_results = gmaps.geocode(property.address)
+            try:
+                google_place_id = geocode_results[0]["place_id"]
+                location = geocode_results[0]["geometry"]["location"]
+            except IndexError:
                 self.stdout.write(self.style.WARNING("Skipped"))
                 return
+            else:
+                property.google_place_id = google_place_id
+                property.location = Point(location["lng"], location["lat"])
 
         property.save()

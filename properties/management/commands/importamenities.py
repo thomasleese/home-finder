@@ -5,7 +5,7 @@ from django.db.models import F
 from django.utils import timezone
 import googlemaps
 
-from properties.models import Amenity, Property
+from properties.models import Place, Property
 
 
 class Command(BaseCommand):
@@ -16,7 +16,7 @@ class Command(BaseCommand):
             F("imported_amenities_at").desc(nulls_first=True)
         ):
             self.stdout.write(self.style.MIGRATE_HEADING(property.address))
-            for kind in Amenity.Kind:
+            for kind in Place.Kind:
                 self.import_amenities(property, kind)
             property.imported_amenities_at = timezone.now()
             property.save()
@@ -39,7 +39,7 @@ class Command(BaseCommand):
             place["geometry"]["location"]["lng"], place["geometry"]["location"]["lat"]
         )
 
-        Amenity.objects.update_or_create(
+        Place.objects.update_or_create(
             google_id=google_id,
             defaults={"name": name, "location": location, "kind": kind},
         )
