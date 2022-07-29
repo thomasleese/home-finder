@@ -48,6 +48,7 @@ class Place(models.Model):
         LIGHT_RAIL_STATION = "light_rail_station", _("Light rail station")
         PARK = "park", _("Park")
         RESTAURANT = "restaurant", _("Restaurant")
+        SCHOOL = "school", _("School")
         SUBWAY_STATION = "subway_station", _("Subway station")
         TRAIN_STATION = "train_station", _("Train station")
 
@@ -56,3 +57,66 @@ class Place(models.Model):
     name = models.TextField()
     location = models.PointField()
     kind = models.CharField(max_length=32, choices=Kind.choices)
+
+
+class PropertyPlace(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    place = models.ForeignKey(Place, on_delete=models.CASCADE)
+
+    driving_distance = models.PositiveBigIntegerField(null=True, blank=True)
+    driving_duration = models.PositiveBigIntegerField(null=True, blank=True)
+    cycling_distance = models.PositiveBigIntegerField(null=True, blank=True)
+    cycling_duration = models.PositiveBigIntegerField(null=True, blank=True)
+    walking_distance = models.PositiveBigIntegerField(null=True, blank=True)
+    walking_duration = models.PositiveBigIntegerField(null=True, blank=True)
+    transit_distance = models.PositiveBigIntegerField(null=True, blank=True)
+    transit_duration = models.PositiveBigIntegerField(null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "properties"
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(
+                    driving_distance__isnull=False,
+                    driving_duration__isnull=False,
+                )
+                | models.Q(
+                    driving_distance__isnull=True,
+                    driving_duration__isnull=True,
+                ),
+                name="valid_driving",
+            ),
+            models.CheckConstraint(
+                check=models.Q(
+                    cycling_distance__isnull=False,
+                    cycling_duration__isnull=False,
+                )
+                | models.Q(
+                    cycling_distance__isnull=True,
+                    cycling_duration__isnull=True,
+                ),
+                name="valid_cycling",
+            ),
+            models.CheckConstraint(
+                check=models.Q(
+                    walking_distance__isnull=False,
+                    walking_duration__isnull=False,
+                )
+                | models.Q(
+                    walking_distance__isnull=True,
+                    walking_duration__isnull=True,
+                ),
+                name="valid_walking",
+            ),
+            models.CheckConstraint(
+                check=models.Q(
+                    transit_distance__isnull=False,
+                    transit_duration__isnull=False,
+                )
+                | models.Q(
+                    transit_distance__isnull=True,
+                    transit_duration__isnull=True,
+                ),
+                name="valid_transit",
+            ),
+        ]
