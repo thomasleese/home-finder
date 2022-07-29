@@ -40,6 +40,9 @@ class Property(models.Model):
             ),
         ]
 
+    def __str__(self):
+        return self.address
+
 
 class Place(models.Model):
     class Kind(models.TextChoices):
@@ -58,6 +61,9 @@ class Place(models.Model):
     location = models.PointField()
     kind = models.CharField(max_length=32, choices=Kind.choices)
 
+    def __str__(self):
+        return self.name
+
 
 class PropertyPlace(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
@@ -73,8 +79,10 @@ class PropertyPlace(models.Model):
     transit_duration = models.PositiveBigIntegerField(null=True, blank=True)
 
     class Meta:
-        verbose_name_plural = "properties"
         constraints = [
+            models.UniqueConstraint(
+                fields=["property", "place"], name="property_place_unique"
+            ),
             models.CheckConstraint(
                 check=models.Q(
                     driving_distance__isnull=False,

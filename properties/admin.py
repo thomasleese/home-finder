@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Place, Property
+from .models import Place, Property, PropertyPlace
 
 
 @admin.register(Place)
@@ -20,3 +20,19 @@ class PropertyAdmin(admin.ModelAdmin):
         "number_of_bedrooms",
     )
     search_fields = ("address",)
+
+
+@admin.register(PropertyPlace)
+class PropertyPlaceAdmin(admin.ModelAdmin):
+    list_display = (
+        "property",
+        "place",
+        "driving_distance",
+        "driving_duration",
+        "cycling_distance",
+        "cycling_duration",
+        "walking_distance",
+        "walking_duration",
+        "transit_distance",
+        "transit_duration",
+    )
