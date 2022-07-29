@@ -36,7 +36,7 @@ class Command(BaseCommand):
                     self.import_property(property)
 
     def import_property(self, zoopla_property):
-        self.stdout.write(f"Importing '{zoopla_property.address}'")
+        self.stdout.write(f" - {zoopla_property.address}")
 
         try:
             property = Property.objects.get(zoopla_id=zoopla_property.id)

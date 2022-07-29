@@ -21,6 +21,8 @@ class Property(models.Model):
     photos = ArrayField(models.URLField())
     number_of_bedrooms = models.PositiveSmallIntegerField()
 
+    imported_amenities_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         verbose_name_plural = "properties"
         constraints = [
