@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 
@@ -117,3 +118,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 GDAL_LIBRARY_PATH = "/opt/homebrew/opt/gdal/lib/libgdal.dylib"
 GEOS_LIBRARY_PATH = "/opt/homebrew/opt/geos/lib/libgeos_c.dylib"
 SPATIALITE_LIBRARY_PATH = "/opt/homebrew/opt/libspatialite/lib/mod_spatialite.dylib"
+
+# Google Maps
+GOOGLE_MAPS_API_KEY = os.environ["GOOGLE_MAPS_API_KEY"]

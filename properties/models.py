@@ -1,5 +1,8 @@
+from django.conf import settings
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 from django.contrib.postgres.fields import ArrayField
+import googlemaps
 
 
 class Property(models.Model):
@@ -33,3 +36,13 @@ class Property(models.Model):
                 name="valid_price",
             ),
         ]
+
+    def fetch_location(self):
+        gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
+        geocode_results = gmaps.geocode(self.address)
+        try:
+            location = geocode_results[0]['geometry']['location']
+        except IndexError:
+            self.location = None
+        else:
+            self.location = Point(location['lat'], location['lng'])
