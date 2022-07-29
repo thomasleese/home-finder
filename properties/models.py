@@ -5,20 +5,6 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
-class PropertyManager(models.Manager):
-    def update_or_create_from_google(self, kind, result):
-        google_id = result["place_id"]
-        name = result["name"]
-        location = Point(
-            result["geometry"]["location"]["lng"], result["geometry"]["location"]["lat"]
-        )
-
-        return self.update_or_create(
-            google_id=google_id,
-            defaults={"name": name, "location": location, "kind": kind},
-        )
-
-
 class Property(models.Model):
     zoopla_id = models.PositiveBigIntegerField()
 
@@ -56,8 +42,6 @@ class Property(models.Model):
             ),
         ]
 
-    objects = PropertyManager()
-
     def __str__(self):
         return self.address
 
@@ -65,12 +49,28 @@ class Property(models.Model):
         return reverse("properties:property-detail", kwargs={"pk": self.pk})
 
 
+class PlaceManager(models.Manager):
+    def update_or_create_from_google(self, kind, result):
+        google_id = result["place_id"]
+        name = result["name"]
+        location = Point(
+            result["geometry"]["location"]["lng"], result["geometry"]["location"]["lat"]
+        )
+
+        return self.update_or_create(
+            google_id=google_id,
+            defaults={"name": name, "location": location, "kind": kind},
+        )
+
+
 class Place(models.Model):
     class Kind(models.TextChoices):
         BUS_STATION = "bus_station", _("Bus station")
+        ESTABLISHMENT = "establishment", _("Establishment")
         GYM = "gym", _("Gym")
         LIGHT_RAIL_STATION = "light_rail_station", _("Light rail station")
         PARK = "park", _("Park")
+        PREMISE = "premise", _("Premise")
         RESTAURANT = "restaurant", _("Restaurant")
         SCHOOL = "school", _("School")
         SUBWAY_STATION = "subway_station", _("Subway station")
@@ -81,6 +81,8 @@ class Place(models.Model):
     name = models.TextField()
     location = models.PointField()
     kind = models.CharField(max_length=32, choices=Kind.choices)
+
+    objects = PlaceManager()
 
     def __str__(self):
         return self.name

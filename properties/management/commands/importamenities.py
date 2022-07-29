@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.gis.geos import Point
 from django.core.management.base import BaseCommand
 from django.db.models import F
 from django.utils import timezone

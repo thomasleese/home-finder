@@ -44,12 +44,9 @@ class TravelTimeRequirement(models.Model):
             models.CheckConstraint(
                 check=models.Q(
                     place__isnull=False,
-                    place_kind__isnull=True,
+                    place_kind="",
                 )
-                | models.Q(
-                    place__isnull=True,
-                    place_kind__isnull=False,
-                ),
+                | (models.Q(place__isnull=True) & ~models.Q(place_kind="")),
                 name="valid_place_or_place_kind",
             ),
         ]
