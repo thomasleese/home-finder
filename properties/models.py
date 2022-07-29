@@ -1,7 +1,22 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
+
+class PropertyManager(models.Manager):
+    def update_or_create_from_google(self, kind, result):
+        google_id = result["place_id"]
+        name = result["name"]
+        location = Point(
+            result["geometry"]["location"]["lng"], result["geometry"]["location"]["lat"]
+        )
+
+        return self.update_or_create(
+            google_id=google_id,
+            defaults={"name": name, "location": location, "kind": kind},
+        )
 
 
 class Property(models.Model):
@@ -40,6 +55,8 @@ class Property(models.Model):
                 name="valid_price",
             ),
         ]
+
+    objects = PropertyManager()
 
     def __str__(self):
         return self.address

@@ -29,17 +29,5 @@ class Command(BaseCommand):
             location=property.location.coords, type=kind.value, rank_by="distance"
         )
 
-        for place in response["results"]:
-            self.import_place(kind, place)
-
-    def import_place(self, kind, place):
-        google_id = place["place_id"]
-        name = place["name"]
-        location = Point(
-            place["geometry"]["location"]["lng"], place["geometry"]["location"]["lat"]
-        )
-
-        Place.objects.update_or_create(
-            google_id=google_id,
-            defaults={"name": name, "location": location, "kind": kind},
-        )
+        for result in response["results"]:
+            Place.objects.update_or_create_from_google(kind, result)
