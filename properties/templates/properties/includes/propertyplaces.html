@@ -1,0 +1,33 @@
+{% load properties_extras %}
+
+<table>
+  <thead>
+    <tr>
+      {% if show_place %}
+        <th>Amenity</th>
+        <th>Type</th>
+      {% elif show_property %}
+        <th>Address</th>
+      {% endif %}
+      <th>Driving</th>
+      <th>Cycling</th>
+      <th>Walking</th>
+      <th>Public transport</th>
+    </tr>
+  </thead>
+
+  {% for object in object_list %}
+    <tr>
+      {% if show_place %}
+        <th><a href="{{ object.place.get_absolute_url }}">{{ object.place.name }}</a></th>
+        <td>{{ object.place.kind }}</td>
+      {% elif show_property %}
+        <th><a href="{{ object.property.get_absolute_url }}">{{ object.property.address }}</a></th>
+      {% endif %}
+      <td>{{ object.driving_duration|format_duration }} ({{ object.driving_distance|format_distance }})</td>
+      <td>{{ object.cycling_duration|format_duration }} ({{ object.cycling_distance|format_distance }})</td>
+      <td>{{ object.walking_duration|format_duration }} ({{ object.walking_distance|format_distance }})</td>
+      <td>{{ object.transit_duration|format_duration }} ({{ object.transit_distance|format_distance }})</td>
+    </tr>
+  {% endfor %}
+</table>

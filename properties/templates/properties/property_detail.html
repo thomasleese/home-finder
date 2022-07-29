@@ -6,9 +6,5 @@
   <h1>{{ object.address }}</h1>
 
   <h2>Closest amenities</h2>
-  <ul>
-    {% for property_place in object.property_places.all %}
-      <li>{{ property_place.place.name }}</li>
-    {% endfor %}
-  </ul>
+  {% include "./includes/propertyplaces.html" with show_place=True object_list=object.property_places.all %}
 {% endblock %}
