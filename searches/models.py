@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from properties.models import Place
+from properties.models import Place, Property
 
 
 class Search(models.Model):
@@ -16,6 +17,9 @@ class Search(models.Model):
 
     class Meta:
         verbose_name_plural = "searches"
+
+    def get_absolute_url(self):
+        return reverse("searches:search-detail", kwargs={"pk": self.pk})
 
 
 class TravelTimeRequirement(models.Model):
@@ -50,3 +54,8 @@ class TravelTimeRequirement(models.Model):
                 name="valid_place_or_place_kind",
             ),
         ]
+
+
+class Result(models.Model):
+    search = models.ForeignKey(Search, on_delete=models.CASCADE, related_name="results")
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name=None)

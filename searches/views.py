@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from django.views.generic import DetailView
+from django.views.generic.edit import UpdateView
 
-# Create your views here.
+from .models import Search
+
+
+class SearchDetailView(DetailView):
+    model = Search
+
+
+class SearchPerformView(UpdateView):
+    model = Search
+    fields = []

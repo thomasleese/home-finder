@@ -9,5 +9,6 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("users/", include("users.urls")),
     path("properties/", include("properties.urls")),
+    path("searches/", include("searches.urls")),
     path("admin/", admin.site.urls),
 ]

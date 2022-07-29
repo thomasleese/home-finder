@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Search for {{ object.user.username }}{% endblock %}
+
+{% block main %}
+  <h1>Search for {{ object.user.username }}</h1>
+
+  <h2>Travel time requirements</h2>
+  <ul>
+    {% for requirement in object.travel_time_requirements.all %}
+      <li>
+        {% if requirement.place %}
+          {{ requirement.place.name }}
+        {% else %}
+          {{ requirement.place_kind }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <form action="{% url "searches:search-perform" object.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Search</button>
+  </form>
+
+  <h2>Results</h2>
+  <ul>
+    {% for result in object.results.all %}
+      <li>{{ result }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
