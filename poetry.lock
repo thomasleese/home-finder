@@ -339,7 +339,7 @@ requests = "^2.27"
 type = "git"
 url = "https://github.com/thomasleese/pyzoopla.git"
 reference = "main"
-resolved_reference = "b50dc9f70577bd22d35dd200ed9de141cbba38f4"
+resolved_reference = "4447189afe76090b5406bd539f95a7a414b875eb"
 
 [[package]]
 name = "requests"
