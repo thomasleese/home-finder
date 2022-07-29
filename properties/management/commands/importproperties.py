@@ -12,21 +12,28 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         zoopla = Zoopla()
 
-        for page in itertools.count(1):
-            self.stdout.write(self.style.MIGRATE_HEADING(f"Rent page #{page}"))
-            properties = zoopla.get_to_rent_properties("london", page)
-            if not properties:
-                break
-            for property in properties:
-                self.import_property(property)
+        regions = ["east-london", "west-london", "south-london", "north-london"]
 
-        for page in itertools.count(1):
-            self.stdout.write(self.style.MIGRATE_HEADING(f"Sale page #{page}"))
-            properties = zoopla.get_for_sale_properties("london", page)
-            if not properties:
-                break
-            for property in properties:
-                self.import_property(property)
+        for region in regions:
+            for page in itertools.count(1):
+                self.stdout.write(
+                    self.style.MIGRATE_HEADING(f"Rent {region} page #{page}")
+                )
+                properties = zoopla.get_to_rent_properties(region, page)
+                if not properties:
+                    break
+                for property in properties:
+                    self.import_property(property)
+
+            for page in itertools.count(1):
+                self.stdout.write(
+                    self.style.MIGRATE_HEADING(f"Sale {region} page #{page}")
+                )
+                properties = zoopla.get_for_sale_properties(region, page)
+                if not properties:
+                    break
+                for property in properties:
+                    self.import_property(property)
 
     def import_property(self, zoopla_property):
         self.stdout.write(f"Importing '{zoopla_property.address}'")

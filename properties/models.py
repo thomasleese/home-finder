@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.contrib.postgres.fields import ArrayField
+from django.utils.translation import gettext_lazy as _
 import googlemaps
 
 
@@ -41,8 +42,28 @@ class Property(models.Model):
         gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
         geocode_results = gmaps.geocode(self.address)
         try:
-            location = geocode_results[0]['geometry']['location']
+            location = geocode_results[0]["geometry"]["location"]
         except IndexError:
             self.location = None
         else:
-            self.location = Point(location['lat'], location['lng'])
+            self.location = Point(location["lat"], location["lng"])
+
+
+class Amenity(models.Model):
+    class Kind(models.TextChoices):
+        BUS_STATION = "bus_station", _("Bus station")
+        GYM = "gym", _("Gym")
+        LIGHT_RAIL_STATION = "light_rail_station", _("Light rail station")
+        PARK = "park", _("Park")
+        RESTAURANT = "restaurant", _("Restaurant")
+        SUBWAY_STATION = "subway_station", _("Subway station")
+        TRAIN_STATION = "train_station", _("Train station")
+
+    google_id = models.CharField(max_length=128)
+
+    name = models.TextField()
+    location = models.PointField()
+    kind = models.CharField(max_length=32, choices=Kind.choices)
+
+    def __str__(self):
+        return self.name
