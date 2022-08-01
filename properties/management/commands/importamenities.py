@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.db.models import F
 from django.utils import timezone
 import googlemaps
 
@@ -10,12 +9,20 @@ from properties.models import Place, Property
 class Command(BaseCommand):
     help = "Import all amenities from Google"
 
+    place_kinds = [
+        Place.Kind.BUS_STATION,
+        Place.Kind.GYM,
+        Place.Kind.LIGHT_RAIL_STATION,
+        Place.Kind.PARK,
+        Place.Kind.RESTAURANT,
+        Place.Kind.SUBWAY_STATION,
+        Place.Kind.TRAIN_STATION,
+    ]
+
     def handle(self, *args, **options):
-        for property in Property.objects.order_by(
-            F("imported_amenities_at").desc(nulls_first=True)
-        ):
+        for property in Property.objects.filter(imported_amenities_at__isnull=True):
             self.stdout.write(self.style.MIGRATE_HEADING(property.address))
-            for kind in Place.Kind:
+            for kind in self.place_kinds:
                 self.import_amenities(property, kind)
             property.imported_amenities_at = timezone.now()
             property.save()

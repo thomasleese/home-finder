@@ -15,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         zoopla = Zoopla()
 
-        regions = ["east-london", "west-london", "south-london", "north-london"]
+        regions = ["london", "bristol", "reading"]
 
         for region in regions:
             for page in itertools.count(1):

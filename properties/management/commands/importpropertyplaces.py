@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
             closest_places = Place.objects.annotate(
                 distance=Distance("location", property.location)
-            ).order_by("distance")[:100]
+            ).order_by("distance")[:25]
 
             for place in closest_places:
                 self.stdout.write(f" - {place.name} ({place.kind})")
